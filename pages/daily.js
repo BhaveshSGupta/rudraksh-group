@@ -1,56 +1,305 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+// import Head from 'next/head';
+// import styles from '../styles/Home.module.css';
+import React from 'react';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+// import "../styles/daily.css"
+import * as Yup from 'yup';
+import { DatePickerField } from '../components/DatePicker';
+import { useCurrentUser } from '../lib/hooks';
 
-export default function Home() {
+export default function Daily() {
+  // Pass the useFormik() hook initial form values and a submit function that will
+  // be called when the form is submitted
+  // const [startDate, setStartDate] = useState(new Date())
+  const [user] = useCurrentUser();
+
+  if (!user) {
+    return (
+      <>
+        <p>Please sign in</p>
+      </>
+    );
+  }
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>Daily</h1>
-
-        <p className={styles.description}>
-          Get started by editing <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a href="https://github.com/vercel/next.js/tree/master/examples" className={styles.card}>
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>Instantly deploy your Next.js site to a public URL with Vercel.</p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+    <div className={'Dailyform'}>
+      <h1>Daily Data Entry</h1>
+      <Formik
+        initialValues={{
+          MS: '',
+          HSD: '',
+          MS_DIP: '',
+          HSD_DIP1: '',
+          HSD_DIP2: '',
+          Closing_Reading_MS_Dispenser_1_Nozle_1: '',
+          Closing_Reading_MS_Dispenser_1_Nozle_2: '',
+          Testing_MS_Dispenser_1_Nozle_1: '15',
+          Testing_MS_Dispenser_1_Nozle_2: '15',
+          Closing_Reading_HSD_Dispenser_1_Nozle_1: '',
+          Closing_Reading_HSD_Dispenser_1_Nozle_2: '',
+          Closing_Reading_HSD_Dispenser_2_Nozle_1: '',
+          Closing_Reading_HSD_Dispenser_2_Nozle_2: '',
+          Closing_Reading_HSD_Dispenser_3_Nozle_1: '',
+          Closing_Reading_HSD_Dispenser_3_Nozle_2: '',
+          Testing_HSD_Dispenser_1_Nozle_1: '15',
+          Testing_HSD_Dispenser_1_Nozle_2: '15',
+          Testing_HSD_Dispenser_2_Nozle_1: '15',
+          Testing_HSD_Dispenser_2_Nozle_2: '15',
+          Testing_HSD_Dispenser_3_Nozle_1: '15',
+          Testing_HSD_Dispenser_3_Nozle_2: '15',
+          Date: Date.now(),
+        }}
+        validationSchema={Yup.object({
+          MS: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .positive('Cannot be Negative'),
+          HSD: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .positive('Cannot be Negative'),
+          MS_DIP: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .positive('Cannot be Negative'),
+          HSD_DIP1: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .positive('Cannot be Negative'),
+          HSD_DIP2: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .positive('Cannot be Negative'),
+          Closing_Reading_MS_Dispenser_1_Nozle_1: Yup.number().required('Required'),
+          Closing_Reading_MS_Dispenser_1_Nozle_2: Yup.number().required('Required'),
+          Testing_MS_Dispenser_1_Nozle_1: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+          Testing_MS_Dispenser_1_Nozle_2: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+          Closing_Reading_HSD_Dispenser_1_Nozle_1: Yup.number().required('Required'),
+          Closing_Reading_HSD_Dispenser_1_Nozle_2: Yup.number().required('Required'),
+          Closing_Reading_HSD_Dispenser_2_Nozle_1: Yup.number().required('Required'),
+          Closing_Reading_HSD_Dispenser_2_Nozle_2: Yup.number().required('Required'),
+          Closing_Reading_HSD_Dispenser_3_Nozle_1: Yup.number().required('Required'),
+          Closing_Reading_HSD_Dispenser_3_Nozle_2: Yup.number().required('Required'),
+          Testing_HSD_Dispenser_1_Nozle_1: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+          Testing_HSD_Dispenser_1_Nozle_2: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+          Testing_HSD_Dispenser_2_Nozle_1: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+          Testing_HSD_Dispenser_2_Nozle_2: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+          Testing_HSD_Dispenser_3_Nozle_1: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+          Testing_HSD_Dispenser_3_Nozle_2: Yup.number()
+            .typeError('Number is Required')
+            .required('Required')
+            .integer('Cannot be in decimal')
+            .min(0, 'Cannot be Negative'),
+        })}
+        onSubmit={async values => {
+          fetch('/api/daily', {
+            method: 'POST',
+            body: JSON.stringify(values),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then(res => res.json())
+            .then(res => {
+              alert(`Volume of MS:${res.Volume_in_MS}
+            Volume of HSD1:${res.Volume_in_HSD_DIP1}
+            Volume of HSD2:${res.Volume_in_HSD_DIP1}`);
+            });
+        }}
+      >
+        <Form>
+          <div className={'row'}>
+            <label htmlFor="Date">Date</label>
+            <DatePickerField name="Date" />
+          </div>
+          <div className={'row'}>
+            <div>
+              <label htmlFor="MS">MS</label>
+              <Field name="MS" type="text" />
+              <ErrorMessage name="MS" />
+            </div>
+            <div>
+              <label htmlFor="HSD">HSD</label>
+              <Field name="HSD" type="text" />
+              <ErrorMessage name="HSD" />
+            </div>
+          </div>
+          <div className={'row'}>
+            <div>
+              <label htmlFor="MS_DIP">MS DIP</label>
+              <Field name="MS_DIP" type="text" />
+              <ErrorMessage name="MS_DIP" />
+            </div>
+            <div>
+              <label htmlFor="HSD_DIP1">HSD DIP1</label>
+              <Field name="HSD_DIP1" type="text" />
+              <ErrorMessage name="HSD_DIP1" />
+            </div>
+            <div>
+              <label htmlFor="HSD_DIP2">HSD DIP2</label>
+              <Field name="HSD_DIP2" type="text" />
+              <ErrorMessage name="HSD_DIP2" />
+            </div>
+          </div>
+          <div className={'row'}>
+            <div className={'rowChild'}>
+              <div>
+                <div>
+                  <label htmlFor="Closing_Reading_MS_Dispenser_1_Nozle_1">
+                    Closing Reading MS Dispenser 1 Nozle 1
+                  </label>
+                  <Field name="Closing_Reading_MS_Dispenser_1_Nozle_1" type="text" />
+                  <ErrorMessage name="Closing_Reading_MS_Dispenser_1_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Closing_Reading_MS_Dispenser_1_Nozle_2">
+                    Closing Reading MS Dispenser 1 Nozle 2
+                  </label>
+                  <Field name="Closing_Reading_MS_Dispenser_1_Nozle_2" type="text" />
+                  <ErrorMessage name="Closing_Reading_MS_Dispenser_1_Nozle_2" />
+                </div>
+              </div>
+              <div>
+                <div>
+                  <label htmlFor="Testing_MS_Dispenser_1_Nozle_1">
+                    Testing MS Dispenser 1 Nozle 1
+                  </label>
+                  <Field name="Testing_MS_Dispenser_1_Nozle_1" type="text" />
+                  <ErrorMessage name="Testing_MS_Dispenser_1_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Testing_MS_Dispenser_1_Nozle_2">
+                    Testing MS Dispenser 1 Nozle 2
+                  </label>
+                  <Field name="Testing_MS_Dispenser_1_Nozle_2" type="text" />
+                  <ErrorMessage name="Testing_MS_Dispenser_1_Nozle_2" />
+                </div>
+              </div>
+            </div>
+            <div className={'rowChild'}>
+              <div>
+                <div>
+                  <label htmlFor="Closing_Reading_HSD_Dispenser_1_Nozle_1">
+                    Closing Reading HSD Dispenser 1 Nozle 1
+                  </label>
+                  <Field name="Closing_Reading_HSD_Dispenser_1_Nozle_1" type="text" />
+                  <ErrorMessage name="Closing_Reading_HSD_Dispenser_1_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Closing_Reading_HSD_Dispenser_1_Nozle_2">
+                    Closing Reading HSD Dispenser 1 Nozle 2
+                  </label>
+                  <Field name="Closing_Reading_HSD_Dispenser_1_Nozle_2" type="text" />
+                  <ErrorMessage name="Closing_Reading_HSD_Dispenser_1_Nozle_2" />
+                </div>
+                <div>
+                  <label htmlFor="Closing_Reading_HSD_Dispenser_2_Nozle_1">
+                    Closing Reading HSD Dispenser 2 Nozle 1
+                  </label>
+                  <Field name="Closing_Reading_HSD_Dispenser_2_Nozle_1" type="text" />
+                  <ErrorMessage name="Closing_Reading_HSD_Dispenser_2_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Closing_Reading_HSD_Dispenser_2_Nozle_2">
+                    Closing Reading HSD Dispenser 2 Nozle 2
+                  </label>
+                  <Field name="Closing_Reading_HSD_Dispenser_2_Nozle_2" type="text" />
+                  <ErrorMessage name="Closing_Reading_HSD_Dispenser_2_Nozle_2" />
+                </div>
+                <div>
+                  <label htmlFor="Closing_Reading_HSD_Dispenser_3_Nozle_1">
+                    Closing Reading HSD Dispenser 3 Nozle 1
+                  </label>
+                  <Field name="Closing_Reading_HSD_Dispenser_3_Nozle_1" type="text" />
+                  <ErrorMessage name="Closing_Reading_HSD_Dispenser_3_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Closing_Reading_HSD_Dispenser_3_Nozle_2">
+                    Closing Reading HSD Dispenser 3 Nozle 2
+                  </label>
+                  <Field name="Closing_Reading_HSD_Dispenser_3_Nozle_2" type="text" />
+                  <ErrorMessage name="Closing_Reading_HSD_Dispenser_3_Nozle_2" />
+                </div>
+              </div>
+              <div>
+                <div>
+                  <label htmlFor="Testing_HSD_Dispenser_1_Nozle_1">
+                    Testing HSD Dispenser 1 Nozle 1
+                  </label>
+                  <Field name="Testing_HSD_Dispenser_1_Nozle_1" type="text" />
+                  <ErrorMessage name="Testing_HSD_Dispenser_1_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Testing_HSD_Dispenser_1_Nozle_2">
+                    Testing HSD Dispenser 1 Nozle 2
+                  </label>
+                  <Field name="Testing_HSD_Dispenser_1_Nozle_2" type="text" />
+                  <ErrorMessage name="Testing_HSD_Dispenser_1_Nozle_2" />
+                </div>
+                <div>
+                  <label htmlFor="Testing_HSD_Dispenser_2_Nozle_1">
+                    Testing HSD Dispenser 2 Nozle 1
+                  </label>
+                  <Field name="Testing_HSD_Dispenser_2_Nozle_1" type="text" />
+                  <ErrorMessage name="Testing_HSD_Dispenser_2_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Testing_HSD_Dispenser_2_Nozle_2">
+                    Testing HSD Dispenser 2 Nozle 2
+                  </label>
+                  <Field name="Testing_HSD_Dispenser_2_Nozle_2" type="text" />
+                  <ErrorMessage name="Testing_HSD_Dispenser_2_Nozle_2" />
+                </div>
+                <div>
+                  <label htmlFor="Testing_HSD_Dispenser_3_Nozle_1">
+                    Testing HSD Dispenser 3 Nozle 1
+                  </label>
+                  <Field name="Testing_HSD_Dispenser_3_Nozle_1" type="text" />
+                  <ErrorMessage name="Testing_HSD_Dispenser_3_Nozle_1" />
+                </div>
+                <div>
+                  <label htmlFor="Testing_HSD_Dispenser_3_Nozle_2">
+                    Testing HSD Dispenser 3 Nozle 2
+                  </label>
+                  <Field name="Testing_HSD_Dispenser_3_Nozle_2" type="text" />
+                  <ErrorMessage name="Testing_HSD_Dispenser_3_Nozle_2" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit">Submit</button>
+        </Form>
+      </Formik>
     </div>
   );
 }
+// Daily.whyDidYouRender = true
+// export default Daily

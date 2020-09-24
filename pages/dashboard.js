@@ -1,56 +1,72 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import React from 'react';
+import useSWR from 'swr';
+import { useCurrentUser } from '../lib/hooks';
 
-export default function Home() {
+export default function Dashboard() {
+  const [user] = useCurrentUser();
+
+  if (!user) {
+    return (
+      <>
+        <p>Please sign in</p>
+      </>
+    );
+  }
+
+  const fetcher = url =>
+    fetch(url)
+      .then(async response => {
+        if (response.status === 401) {
+          mutate(null);
+        }
+        return await response.json();
+      })
+      .catch(e => {
+        // localStorage.setItem("loggedIn", "")
+        // mutate(null)
+        // history.push("/")
+        // return ""
+        console.log(e);
+      });
+  const { data = [], mutate, error } = useSWR('/api/dashboard?sortBy=date:desc', fetcher);
+  if (error) {
+    return 'An error has occurred please refresh';
+  }
+  if (!data) return 'Loading...';
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>Dashboard</h1>
-
-        <p className={styles.description}>
-          Get started by editing <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a href="https://github.com/vercel/next.js/tree/master/examples" className={styles.card}>
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>Instantly deploy your Next.js site to a public URL with Vercel.</p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+    <div>
+      <h1>Dashboard</h1>
+      {data.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Volume for MS</th>
+              <th>Volume for HSD1</th>
+              <th>Volume for HSD2</th>
+              <th>Total for Petrol</th>
+              <th>Total for Diesel</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((day, index) => {
+              let d = new Date(day.Date);
+              return (
+                <tr key={index}>
+                  <td style={{ margin: '20px 10px' }}>
+                    {d.toLocaleString('en-IN', { dateStyle: 'medium' })}
+                  </td>
+                  <td style={{ margin: '20px 10px' }}>{day.Volume_in_MS}</td>
+                  <td style={{ margin: '20px 10px' }}>{day.Volume_in_HSD_DIP1}</td>
+                  <td style={{ margin: '20px 10px' }}>{day.Volume_in_HSD_DIP2}</td>
+                  <td style={{ margin: '20px 10px' }}>{day.total_petrol}</td>
+                  <td style={{ margin: '20px 10px' }}>{day.total_deisel}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
